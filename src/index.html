@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<!-- 告诉浏览器本站点支持 light + dark 两种配色，请勿启用"强制深色模式"重绘网页 -->
+<meta name="color-scheme" content="light dark" />
+<meta name="supported-color-schemes" content="light dark" />
+<meta name="theme-color" content="#0b1220" id="themeColorMeta" />
+<title>周末规划 · Weekend Planner</title>
+<!-- ?v=__BUILD_VERSION__ 由 build 脚本注入，避免每次手改 -->
+<link rel="stylesheet" href="css/main.css?v=__BUILD_VERSION__" />
+<script>
+  // 提前应用主题，避免页面初次渲染闪烁
+  (function () {
+    try {
+      var t = localStorage.getItem("wp-theme");
+      if (t === "dark" || t === "light") {
+        document.documentElement.setAttribute("data-theme", t);
+      }
+    } catch (_) {}
+  })();
+</script>
+</head>
+<body>
+
+<!-- ========== SVG icon symbols（一次内联，全站 <use> 引用） ========== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="icon-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    <symbol id="icon-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="icon-check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></symbol>
+    <symbol id="icon-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+    <symbol id="icon-chevron-up" viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></symbol>
+    <symbol id="icon-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></symbol>
+    <symbol id="icon-settings" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>
+    </symbol>
+    <symbol id="icon-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14z"/></symbol>
+    <symbol id="icon-edit" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></symbol>
+    <symbol id="icon-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+    <symbol id="icon-fork" viewBox="0 0 24 24"><!-- 餐具：左叉 + 右刀，标准 Lucide utensils 风格 -->
+      <path d="M3 2v7a3 3 0 0 0 3 3v10"/>
+      <path d="M9 2v7a3 3 0 0 1-3 3"/>
+      <path d="M15 22V11.5c0-2.5 1-5 4-9.5v20"/>
+    </symbol>
+    <symbol id="icon-sun" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="4"/>
+      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+    </symbol>
+    <symbol id="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></symbol>
+    <symbol id="icon-monitor" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></symbol>
+  </defs>
+</svg>
+
+<!-- ========== 视图：首页（清单列表） ========== -->
+<div class="view active" id="view-home">
+  <div class="app">
+    <div class="topbar">
+      <div class="title">📅 周末规划</div>
+      <button class="icon-btn" onclick="randomMealPicker()" title="吃啥呢"><svg class="icon"><use href="#icon-fork"/></svg></button>
+      <button class="icon-btn" id="themeToggleBtn" onclick="cycleTheme()" title="主题"><svg class="icon"><use href="#icon-monitor"/></svg></button>
+      <button class="icon-btn" onclick="goSettings()" title="设置"><svg class="icon"><use href="#icon-settings"/></svg></button>
+      <button class="icon-btn primary" onclick="startNewList()"><svg class="icon"><use href="#icon-plus"/></svg> 新建</button>
+    </div>
+    <div id="listsContainer"></div>
+    <div id="homeHint" class="empty-state" style="display:none;font-size:12px;padding:14px;">
+      点右上⚙️管理候选池和必做项
+    </div>
+
+    <!-- ========== 关于这四个原则（首页底部小字链接，避免喧宾夺主） ========== -->
+    <details class="about-link" id="aboutPrinciplesCard">
+      <summary>
+        <span class="about-link-text">📖 不知道周末要安排什么？看这里</span>
+        <span class="about-link-chev">›</span>
+      </summary>
+      <div class="about-link-body">
+
+        <p class="al-intro">
+          初衷：<strong>让周末过得"厚实"，而不是过得"快"</strong>。按下面 4 个原则各安排 1 件事，回头看会感觉真的休息到了。
+        </p>
+
+        <div class="al-section">
+          <div class="al-section-title">🛌 基础前提：作息别乱</div>
+          <ul class="al-list">
+            <li>周末以<strong>早睡为主</strong>，尽量不熬夜</li>
+            <li>周日晚上比平时<strong>稍早一点睡</strong>，让周一好过一些</li>
+            <li>周末起床别拖太久，<strong>跟平时差不多就行</strong>（最多晚 1-2 小时）</li>
+          </ul>
+          <p class="al-note">作息乱掉，其他原则都很难做到。</p>
+        </div>
+
+        <div class="al-section">
+          <div class="al-section-title">🎯 每个原则在解决什么问题</div>
+          <ul class="al-principles">
+            <li>
+              <span class="al-name">🏃 动一动</span>
+              <span class="al-desc">一天动得多一点、一天轻轻动就够，防止整个人变得迟钝和疲惫。</span>
+            </li>
+            <li>
+              <span class="al-name">🧘 让大脑歇一下</span>
+              <span class="al-desc">真正的休息≠刷手机。睡前发呆、不带耳机散步、安静吃饭都算。</span>
+            </li>
+            <li>
+              <span class="al-name">✨ 主动做点什么</span>
+              <span class="al-desc">自己主动选的事——下厨、看书、整理、出门探索。做完会有踏实感，不会觉得"白过一天"。</span>
+            </li>
+            <li>
+              <span class="al-name">🌙 守好周日晚</span>
+              <span class="al-desc">早点睡 + 断开工作消息 + 写下周一最重要的几件事。让周一不那么难熬。</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="al-section">
+          <div class="al-section-title">💡 几个关键点</div>
+          <ul class="al-list">
+            <li>每个原则<strong>做一件就够</strong>，不需要每个例子都做</li>
+            <li>周末感觉过得快，往往是因为<strong>重复做同一件事</strong>（比如躺一整天/刷一整天手机）</li>
+            <li>不想面对周一是正常的，但<strong>真正充好电了</strong>，周一会没那么难熬</li>
+          </ul>
+        </div>
+
+        <div class="al-section al-warning">
+          <div class="al-section-title">⚠️ 为什么宅一天状态会变差</div>
+          <p class="al-paragraph">
+            宅着看起来是在休息，但其实是<strong>消耗，不是充电</strong>——身体没动会迟钝，长时间待同一空间大脑会闷，
+            刷手机看视频是在被信息推着走，没有真正休息，而且会有"这天白过了"的空洞感。
+          </p>
+          <p class="al-paragraph">
+            如果发现自己已经宅了半天状态不好：先出门走一圈，<strong>不带耳机、不看手机</strong>，回来再决定接下来做什么。
+          </p>
+        </div>
+
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ========== 视图：向导（新建/编辑清单） ========== -->
+<div class="view" id="view-wizard">
+  <div class="app">
+    <div class="topbar">
+      <button class="back" onclick="cancelWizard()" title="返回"><svg class="icon"><use href="#icon-arrow-left"/></svg></button>
+      <div class="title" id="wizardTitle">新建周末清单</div>
+    </div>
+    <div class="stepper">
+      <div class="seg" data-seg="1"></div>
+      <div class="seg" data-seg="2"></div>
+      <div class="seg" data-seg="3"></div>
+    </div>
+    <div id="wizardBody"></div>
+    <div class="wizard-nav">
+      <button class="btn btn-secondary" id="wizardPrev" onclick="wizardPrev()">上一步</button>
+      <button class="btn" id="wizardNext" onclick="wizardNext()">下一步</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 视图：清单详情（勾选 / 复制） ========== -->
+<div class="view" id="view-detail">
+  <div class="app">
+    <div class="topbar">
+      <button class="back" onclick="goHome()" title="返回"><svg class="icon"><use href="#icon-arrow-left"/></svg></button>
+      <div class="title" id="detailTitle">清单</div>
+      <button class="icon-btn" onclick="editCurrentList()" title="编辑"><svg class="icon"><use href="#icon-edit"/></svg></button>
+      <button class="icon-btn" onclick="copyCurrentMarkdown()" title="复制"><svg class="icon"><use href="#icon-copy"/></svg></button>
+    </div>
+    <div id="detailBody"></div>
+  </div>
+</div>
+
+<!-- ========== 视图：设置（候选池 + 必做项） ========== -->
+<div class="view" id="view-settings">
+  <div class="app">
+    <div class="topbar">
+      <button class="back" onclick="backFromSettings()" title="返回"><svg class="icon"><use href="#icon-arrow-left"/></svg></button>
+      <div class="title">⚙️ 设置</div>
+    </div>
+    <!-- 编辑中提示条：仅当从向导跳来时显示，告诉用户编辑没丢 -->
+    <div id="settingsEditingHint" class="editing-hint" style="display:none">
+      <span class="eh-icon">✏️</span>
+      <span class="eh-text">正在编辑清单中…改完点左上角"返回"继续</span>
+    </div>
+    <div id="settingsBody"></div>
+  </div>
+</div>
+
+<!-- ========== Toast / Modal 容器 ========== -->
+<div id="toast"></div>
+<div id="modalRoot"></div>
+
+<!-- 6 个独立 JS 文件，按依赖顺序加载（核心 → 视图 → DnD → 详情 → 启动） -->
+<script src="js/01-core.js?v=__BUILD_VERSION__"></script>
+<script src="js/02-home-step1.js?v=__BUILD_VERSION__"></script>
+<script src="js/03-step2-step3.js?v=__BUILD_VERSION__"></script>
+<script src="js/04-dnd.js?v=__BUILD_VERSION__"></script>
+<script src="js/05-detail-settings.js?v=__BUILD_VERSION__"></script>
+<script src="js/06-bootstrap.js?v=__BUILD_VERSION__"></script>
+</body>
+</html>
